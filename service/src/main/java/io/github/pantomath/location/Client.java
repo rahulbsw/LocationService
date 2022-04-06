@@ -19,7 +19,6 @@ public class Client {
         // or an async stub with Future are always possible.
         FindGrpc.FindBlockingStub stub = FindGrpc.newBlockingStub(channel);
         IPAddresses.Builder request = IPAddresses.newBuilder()
-                .addIp("128.107.241.164")
                 .addIp("98.143.133.154")
                 .addIp("107.6.171.130")
                 .addIp("45.33.66.232")
