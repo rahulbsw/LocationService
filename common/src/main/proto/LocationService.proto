@@ -1,0 +1,108 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package io.github.pantomath.location.common;
+
+
+message IPAddress{
+  string ip=1;
+}
+
+message IPAddressExt{
+  string ip=1;
+  bool include_isp=2;
+  bool include_domain=3;
+
+}
+
+message IPAddresses{
+  repeated string ip=1;
+}
+
+message IPAddressesExt{
+  repeated string ip=1;
+  bool include_isp=2;
+  bool include_domain=3;
+}
+
+
+message Country {
+  string continent=1;
+  string country = 2;
+  string country_iso_code = 3;
+  double latitude=4;
+  double longitude=5;
+  string ipaddress=6;
+}
+
+message City {
+  string continent=1;
+  string country = 2;
+  string country_iso_code = 3;
+  double latitude=4;
+  double longitude=5;
+  string region=6;
+  string city=7;
+  string zipcode=8;
+  string timezone=9;
+  string ipaddress=10;
+}
+
+message Domain {
+  string domain=1;
+}
+
+message ISP {
+  string isp=1;
+  string organization=2;
+}
+
+message ASN {
+  string continent=1;
+  string country = 2;
+  string registeredCountry = 3;
+  string representedCountry = 4;
+  string traits=5;
+  string ipaddress=6;
+}
+
+message Location {
+    City city=2;
+    ISP isp=3;
+    Domain domain=4;
+}
+
+message CityResponse{
+  string ipaddress=1;
+  City city=2;
+
+}
+message CityResponses {
+  repeated CityResponse city=1;
+}
+message LocationResponse{
+  string ipaddress=1;
+  Location location=2;
+
+}
+message LocationResponses {
+  repeated LocationResponse location=1;
+}
+
+message CountryResponse{
+  string ipaddress=1;
+  Country country=2;
+
+}
+message CountryResponses {
+  repeated CountryResponse country=1;
+}
+
+service Find{
+  rpc location(IPAddressExt) returns (LocationResponse);
+  rpc city(IPAddress) returns (CityResponse);
+  rpc country(IPAddress) returns (CountryResponse);
+  rpc locations(IPAddressesExt) returns (LocationResponses);
+  rpc cities(IPAddresses) returns (CityResponses);
+  rpc countries(IPAddresses) returns (CountryResponses);
+  rpc asn(IPAddress) returns (ASN);
+}
