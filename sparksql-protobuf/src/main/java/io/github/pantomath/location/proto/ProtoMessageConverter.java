@@ -1,21 +1,3 @@
-/* 
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package io.github.pantomath.location.proto;
 
 import com.google.protobuf.ByteString;
@@ -28,7 +10,6 @@ import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.Converter;
 import org.apache.parquet.io.api.GroupConverter;
 import org.apache.parquet.io.api.PrimitiveConverter;
-import org.apache.parquet.proto.ProtoWriteSupport;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.IncompatibleSchemaModificationException;
 import org.apache.parquet.schema.Type;
@@ -43,12 +24,8 @@ import static com.google.protobuf.Descriptors.FieldDescriptor.JavaType;
 /**
  * Converts Protocol Buffer message (both top level and inner) to parquet.
  * This is internal class, use {@link ProtoRecordConverter}.
- *
+ * <p>
  * Added {@link ProtoListConverter} to read nested parquet written by SparkSQL
- *
- * @see {@link ProtoWriteSupport}
- * @author Lukas Nalezenec
- * @author Forest Fang
  */
 class ProtoMessageConverter extends GroupConverter {
 
@@ -147,14 +124,22 @@ class ProtoMessageConverter extends GroupConverter {
         JavaType javaType = fieldDescriptor.getJavaType();
 
         switch (javaType) {
-            case STRING: return new ProtoStringConverter(pvc);
-            case FLOAT: return new ProtoFloatConverter(pvc);
-            case DOUBLE: return new ProtoDoubleConverter(pvc);
-            case BOOLEAN: return new ProtoBooleanConverter(pvc);
-            case BYTE_STRING: return new ProtoBinaryConverter(pvc);
-            case ENUM: return new ProtoEnumConverter(pvc, fieldDescriptor);
-            case INT: return new ProtoIntConverter(pvc);
-            case LONG: return new ProtoLongConverter(pvc);
+            case STRING:
+                return new ProtoStringConverter(pvc);
+            case FLOAT:
+                return new ProtoFloatConverter(pvc);
+            case DOUBLE:
+                return new ProtoDoubleConverter(pvc);
+            case BOOLEAN:
+                return new ProtoBooleanConverter(pvc);
+            case BYTE_STRING:
+                return new ProtoBinaryConverter(pvc);
+            case ENUM:
+                return new ProtoEnumConverter(pvc, fieldDescriptor);
+            case INT:
+                return new ProtoIntConverter(pvc);
+            case LONG:
+                return new ProtoLongConverter(pvc);
             case MESSAGE: {
                 Message.Builder subBuilder = parentBuilder.newBuilderForField(fieldDescriptor);
                 return new ProtoMessageConverter(pvc, subBuilder, parquetType.asGroupType());
@@ -182,8 +167,8 @@ class ProtoMessageConverter extends GroupConverter {
 
         private final Descriptors.FieldDescriptor fieldType;
         private final Map<Binary, Descriptors.EnumValueDescriptor> enumLookup;
-        private Descriptors.EnumValueDescriptor[] dict;
         private final ParentValueContainer parent;
+        private Descriptors.EnumValueDescriptor[] dict;
 
         public ProtoEnumConverter(ParentValueContainer parent, Descriptors.FieldDescriptor fieldType) {
             this.parent = parent;
@@ -193,7 +178,7 @@ class ProtoMessageConverter extends GroupConverter {
 
         /**
          * Fills lookup structure for translating between parquet enum values and Protocol buffer enum values.
-         * */
+         */
         private Map<Binary, Descriptors.EnumValueDescriptor> makeLookupStructure(Descriptors.FieldDescriptor enumFieldType) {
             Descriptors.EnumDescriptor enumType = enumFieldType.getEnumType();
             Map<Binary, Descriptors.EnumValueDescriptor> lookupStructure = new HashMap<Binary, Descriptors.EnumValueDescriptor>();
@@ -210,8 +195,9 @@ class ProtoMessageConverter extends GroupConverter {
 
         /**
          * Translates given parquet enum value to protocol buffer enum value.
+         *
          * @throws org.apache.parquet.io.InvalidRecordException is there is no corresponding value.
-         * */
+         */
         private Descriptors.EnumValueDescriptor translateEnumValue(Binary binaryValue) {
             Descriptors.EnumValueDescriptor protoValue = enumLookup.get(binaryValue);
 
@@ -243,7 +229,7 @@ class ProtoMessageConverter extends GroupConverter {
 
         @Override
         public void setDictionary(Dictionary dictionary) {
-            dict = new  Descriptors.EnumValueDescriptor[dictionary.getMaxId() + 1];
+            dict = new Descriptors.EnumValueDescriptor[dictionary.getMaxId() + 1];
             for (int i = 0; i <= dictionary.getMaxId(); i++) {
                 Binary binaryValue = dictionary.decodeToBinary(i);
                 dict[i] = translateEnumValue(binaryValue);
@@ -364,7 +350,7 @@ class ProtoMessageConverter extends GroupConverter {
             }
 
             Type childSchema = parquetSchema.getFields().get(0);
-            if(parquetSchema.isRepetition(Type.Repetition.REPEATED)) {
+            if (parquetSchema.isRepetition(Type.Repetition.REPEATED)) {
                 converter = newScalarConverter(parent, builder, fieldDescriptor, childSchema);
             } else {
                 converter = new ProtoListConverter(parent, builder, fieldDescriptor, childSchema.asGroupType());
@@ -380,9 +366,11 @@ class ProtoMessageConverter extends GroupConverter {
         }
 
         @Override
-        public void start() { }
+        public void start() {
+        }
 
         @Override
-        public void end() { }
+        public void end() {
+        }
     }
 }

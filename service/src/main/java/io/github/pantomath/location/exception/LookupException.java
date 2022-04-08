@@ -1,6 +1,6 @@
 package io.github.pantomath.location.exception;
 
-public class LookupException extends  Exception{
+public class LookupException extends Exception {
     public LookupException() {
     }
 

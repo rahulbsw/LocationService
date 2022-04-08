@@ -1,17 +1,7 @@
 package io.github.pantomath.location.common.auth.jwt;
 
-import io.grpc.Context;
-import io.grpc.Contexts;
-import io.grpc.Metadata;
-import io.grpc.ServerCall;
-import io.grpc.ServerCallHandler;
-import io.grpc.ServerInterceptor;
-import io.grpc.Status;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.grpc.*;
+import io.jsonwebtoken.*;
 
 /**
  * This interceptor gets the JWT from the metadata, verifies it and sets the client identifier

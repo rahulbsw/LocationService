@@ -1,21 +1,14 @@
 package io.github.pantomath.location.proto.spark
 
-import com.google.protobuf.Descriptors.FieldDescriptor
-import com.google.protobuf.Descriptors.FieldDescriptor.JavaType._
-import com.google.protobuf.{AbstractMessage, ByteString, MessageOrBuilder}
-import org.apache.spark.sql.types._
-import scala.reflect.runtime.universe.TypeTag
+import com.google.protobuf.AbstractMessage
 import org.apache.spark.annotation.Experimental
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{Row, DataFrame, SQLContext}
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.{DataFrame, SQLContext}
+
+import scala.reflect.runtime.universe.TypeTag
 
 package object sql {
-  /**
-   * A JVM-global lock that should be used to prevent thread safety issues when using things in
-   * scala.reflect.*.  Note that Scala Reflection API is made thread-safe in 2.11, but not yet for
-   * 2.10.* builds.  See SI-6240 for more details.
-   */
-  protected[sql] object ScalaReflectionLock
 
   implicit class ProtoSQLContext(sqlContext: SQLContext) {
     /**

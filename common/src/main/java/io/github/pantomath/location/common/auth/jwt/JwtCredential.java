@@ -1,9 +1,11 @@
 package io.github.pantomath.location.common.auth.jwt;
+
 import io.grpc.CallCredentials;
 import io.grpc.Metadata;
 import io.grpc.Status;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.util.concurrent.Executor;
 
 /**

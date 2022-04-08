@@ -1,6 +1,6 @@
 package io.github.pantomath.location.exception;
 
-public class InitializationException  extends Exception{
+public class InitializationException extends Exception {
     public InitializationException() {
     }
 

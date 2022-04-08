@@ -14,18 +14,21 @@ import java.util.concurrent.TimeUnit;
 public class IP2LocationServer {
     private final Server server;
 
-    public <S extends BindableService> IP2LocationServer(ServerBuilder<?> serverBuilder,S... services) throws URISyntaxException {
-        Arrays.stream(services).forEach(s->serverBuilder.addService(s));
-        this.server =serverBuilder.build();
+    public <S extends BindableService> IP2LocationServer(ServerBuilder<?> serverBuilder, S... services) throws URISyntaxException {
+        Arrays.stream(services).forEach(s -> serverBuilder.addService(s));
+        this.server = serverBuilder.build();
     }
 
-    public <S extends BindableService>  IP2LocationServer(int port,S... services) throws URISyntaxException {
-        this(ServerBuilder.forPort(port),services);
+    public <S extends BindableService> IP2LocationServer(int port, S... services) throws URISyntaxException {
+        this(ServerBuilder.forPort(port), services);
     }
-    /** Start serving requests. */
+
+    /**
+     * Start serving requests.
+     */
     public void start() throws IOException {
         server.start();
-        log.info("Server started, listening on {}" ,server.getPort());
+        log.info("Server started, listening on {}", server.getPort());
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -34,7 +37,7 @@ public class IP2LocationServer {
                 try {
                     IP2LocationServer.this.stop();
                 } catch (InterruptedException e) {
-                    log.error("Server shutting down" ,e);
+                    log.error("Server shutting down", e);
                     e.printStackTrace(System.err);
                 }
                 log.info("*** server shut down");
@@ -42,7 +45,9 @@ public class IP2LocationServer {
         });
     }
 
-    /** Stop serving requests and shutdown resources. */
+    /**
+     * Stop serving requests and shutdown resources.
+     */
     public void stop() throws InterruptedException {
         if (server != null) {
             server.shutdown().awaitTermination(30, TimeUnit.SECONDS);

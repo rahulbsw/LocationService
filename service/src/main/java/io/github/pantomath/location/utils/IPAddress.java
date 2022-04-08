@@ -16,14 +16,21 @@ public class IPAddress {
         this.inetAddress = InetAddress.getByName(ipAddress);
         isIPv4 = (inetAddress instanceof Inet4Address) && inetAddress.getHostAddress().equals(ipAddress);
         isIPv6 = (inetAddress instanceof Inet6Address);
-        if(isIPv4)
-            this.isPrivate=isPrivateIPv4(ipAddress);
-        else if(isIPv6)
-            this.isPrivate=isPrivateIPv6(ipAddress);
+        if (isIPv4)
+            this.isPrivate = isPrivateIPv4(ipAddress);
+        else if (isIPv6)
+            this.isPrivate = isPrivateIPv6(ipAddress);
         else
-            this.isPrivate=false;
-     }
+            this.isPrivate = false;
+    }
 
+    public static Optional<IPAddress> create(String ipAddress) {
+        try {
+            return Optional.of(new IPAddress(ipAddress));
+        } catch (UnknownHostException e) {
+            return Optional.empty();
+        }
+    }
 
     public boolean isIPv4(String ipAddress) {
         return this.isIPv4;
@@ -85,13 +92,5 @@ public class IPAddress {
             }
         }
         return isPrivateIPv6;
-    }
-
-    public static Optional<IPAddress> create(String ipAddress){
-        try {
-            return Optional.of(new IPAddress(ipAddress));
-        } catch (UnknownHostException e) {
-            return Optional.empty();
-        }
     }
 }
