@@ -74,7 +74,7 @@ public class FinderService extends FindGrpc.FindImplBase {
             } catch (LookupException e) {
                 log.error(e);
             }
-            responses.addLocation(LocationResponse.newBuilder().setLocation(location).setIpaddress(ip).build());
+            responses.addLocations(LocationResponse.newBuilder().setLocation(location).setIpaddress(ip).build());
         }
         responseObserver.onNext(responses.build());
         responseObserver.onCompleted();
@@ -90,7 +90,7 @@ public class FinderService extends FindGrpc.FindImplBase {
             } catch (LookupException e) {
                 log.error(e);
             }
-            responses.addCity(CityResponse.newBuilder().setCity(city).setIpaddress(ip).build());
+            responses.addCities(CityResponse.newBuilder().setCity(city).setIpaddress(ip).build());
         }
         responseObserver.onNext(responses.build());
         responseObserver.onCompleted();
@@ -106,7 +106,7 @@ public class FinderService extends FindGrpc.FindImplBase {
             } catch (LookupException e) {
                 log.error(e);
             }
-            responses.addCountry(CountryResponse.newBuilder().setCountry(country).setIpaddress(ip).build());
+            responses.addCountries(CountryResponse.newBuilder().setCountry(country).setIpaddress(ip).build());
         }
         responseObserver.onNext(responses.build());
         responseObserver.onCompleted();

@@ -32,6 +32,11 @@
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -43,6 +48,7 @@
             </extension>
         </extensions>
         <plugins>
+
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
@@ -66,6 +72,39 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <compilerId>javac-with-errorprone</compilerId>-->
+<!--                    <forceJavacCompilerUse>true</forceJavacCompilerUse>-->
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>io.grpc</groupId>-->
+<!--                            <artifactId>grpc-java-api-checker</artifactId>-->
+<!--                            <version>1.1.0</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
+<!--                    &lt;!&ndash; You can specify the settings &ndash;&gt;-->
+<!--                    <compilerArgs>-->
+<!--                        <arg>-XepDisableAllChecks</arg>-->
+<!--                        <arg>-Xep:GrpcInternal:ERROR</arg>-->
+<!--                        <arg>-Xep:GrpcExperimentalApi:ERROR</arg>-->
+<!--                    </compilerArgs>-->
+<!--                </configuration>-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.codehaus.plexus</groupId>-->
+<!--                        <artifactId>plexus-compiler-javac-errorprone</artifactId>-->
+<!--                        <version>2.5</version>-->
+<!--                    </dependency>-->
+<!--                    <dependency>-->
+<!--                        <groupId>com.google.errorprone</groupId>-->
+<!--                        <artifactId>error_prone_core</artifactId>-->
+<!--                        <version>2.3.2</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

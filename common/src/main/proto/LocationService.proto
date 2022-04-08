@@ -77,7 +77,7 @@ message CityResponse{
 
 }
 message CityResponses {
-  repeated CityResponse city=1;
+  repeated CityResponse cities=1;
 }
 message LocationResponse{
   string ipaddress=1;
@@ -85,7 +85,7 @@ message LocationResponse{
 
 }
 message LocationResponses {
-  repeated LocationResponse location=1;
+  repeated LocationResponse locations=1;
 }
 
 message CountryResponse{
@@ -94,7 +94,7 @@ message CountryResponse{
 
 }
 message CountryResponses {
-  repeated CountryResponse country=1;
+  repeated CountryResponse countries=1;
 }
 
 service Find{
