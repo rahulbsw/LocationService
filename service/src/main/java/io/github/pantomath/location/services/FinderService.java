@@ -1,3 +1,25 @@
+/**
+ * The MIT License
+ * Copyright © 2022 Project Location Service using GRPC and IP lookup
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package io.github.pantomath.location.services;
 
 import io.github.pantomath.location.common.*;
@@ -10,10 +32,22 @@ import lombok.extern.log4j.Log4j2;
 
 import java.net.URISyntaxException;
 
+/**
+ * <p>FinderService class.</p>
+ *
+ * @author rajain5
+ * @version $Id: $Id
+ */
 @Log4j2
 public class FinderService extends FindGrpc.FindImplBase {
     Store[] stores = new Store[2];
 
+    /**
+     * <p>Constructor for FinderService.</p>
+     *
+     * @throws java.net.URISyntaxException if any.
+     * @throws io.github.pantomath.location.exception.InitializationException if any.
+     */
     public FinderService() throws URISyntaxException, InitializationException {
         this.stores[0] = Store.create(new DBConfig(DBConfig.TYPE.MAXMIND,
                 FinderService.class.getResource("/database/GeoLite2-City.mmdb").toURI(),
@@ -28,6 +62,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         ));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void location(IPAddressExt request, StreamObserver<LocationResponse> responseObserver) {
         try {
@@ -40,6 +75,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void city(IPAddress request, StreamObserver<CityResponse> responseObserver) {
         try {
@@ -53,6 +89,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void country(IPAddress request, StreamObserver<CountryResponse> responseObserver) {
         try {
@@ -65,6 +102,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void locations(IPAddressesExt request, StreamObserver<LocationResponses> responseObserver) {
         LocationResponses.Builder responses = LocationResponses.newBuilder();
@@ -81,6 +119,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         responseObserver.onCompleted();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void cities(IPAddresses request, StreamObserver<CityResponses> responseObserver) {
         CityResponses.Builder responses = CityResponses.newBuilder();
@@ -97,6 +136,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         responseObserver.onCompleted();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void countries(IPAddresses request, StreamObserver<CountryResponses> responseObserver) {
         CountryResponses.Builder responses = CountryResponses.newBuilder();
@@ -113,6 +153,7 @@ public class FinderService extends FindGrpc.FindImplBase {
         responseObserver.onCompleted();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void asn(IPAddress request, StreamObserver<ASN> responseObserver) {
         super.asn(request, responseObserver);

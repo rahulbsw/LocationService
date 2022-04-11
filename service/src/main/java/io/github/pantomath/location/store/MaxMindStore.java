@@ -1,3 +1,25 @@
+/**
+ * The MIT License
+ * Copyright © 2022 Project Location Service using GRPC and IP lookup
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package io.github.pantomath.location.store;
 
 import com.maxmind.db.CHMCache;
@@ -19,6 +41,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * <p>MaxMindStore class.</p>
+ *
+ * @author rajain5
+ * @version $Id: $Id
+ */
 public class MaxMindStore extends Store {
     final boolean isCityReaderReady;
     final boolean isISPReaderReady;
@@ -27,6 +55,12 @@ public class MaxMindStore extends Store {
     DatabaseReader ispReader;
     DatabaseReader asnReader;
 
+    /**
+     * <p>Constructor for MaxMindStore.</p>
+     *
+     * @param config a {@link io.github.pantomath.location.config.DBConfig} object
+     * @throws io.github.pantomath.location.exception.InitializationException if any.
+     */
     protected MaxMindStore(DBConfig config) throws InitializationException {
         super(config);
         this.isCityReaderReady = Objects.nonNull(this.cityReader);
@@ -34,6 +68,7 @@ public class MaxMindStore extends Store {
         this.isASNReaderReady = Objects.nonNull(this.asnReader);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void load() throws InitializationException {
         try {
@@ -56,6 +91,7 @@ public class MaxMindStore extends Store {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public City city(String ip) throws LookupException {
         if (!isCityReaderReady)
@@ -81,6 +117,7 @@ public class MaxMindStore extends Store {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public Country country(String ip) throws LookupException {
         if (!isCityReaderReady)
@@ -98,6 +135,7 @@ public class MaxMindStore extends Store {
         }));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Location location(String ip, boolean includeISP, boolean includeDomain) throws LookupException {
         if (!isCityReaderReady)

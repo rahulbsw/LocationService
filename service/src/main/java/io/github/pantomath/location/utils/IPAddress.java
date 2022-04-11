@@ -1,3 +1,25 @@
+/**
+ * The MIT License
+ * Copyright © 2022 Project Location Service using GRPC and IP lookup
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package io.github.pantomath.location.utils;
 
 import java.net.Inet4Address;
@@ -6,12 +28,24 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Optional;
 
+/**
+ * <p>IPAddress class.</p>
+ *
+ * @author rajain5
+ * @version $Id: $Id
+ */
 public class IPAddress {
     final InetAddress inetAddress;
     final boolean isPrivate;
     final boolean isIPv4;
     final boolean isIPv6;
 
+    /**
+     * <p>Constructor for IPAddress.</p>
+     *
+     * @param ipAddress a {@link java.lang.String} object
+     * @throws java.net.UnknownHostException if any.
+     */
     public IPAddress(String ipAddress) throws UnknownHostException {
         this.inetAddress = InetAddress.getByName(ipAddress);
         isIPv4 = (inetAddress instanceof Inet4Address) && inetAddress.getHostAddress().equals(ipAddress);
@@ -24,6 +58,12 @@ public class IPAddress {
             this.isPrivate = false;
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param ipAddress a {@link java.lang.String} object
+     * @return a {@link java.util.Optional} object
+     */
     public static Optional<IPAddress> create(String ipAddress) {
         try {
             return Optional.of(new IPAddress(ipAddress));
@@ -32,22 +72,49 @@ public class IPAddress {
         }
     }
 
+    /**
+     * <p>isIPv4.</p>
+     *
+     * @param ipAddress a {@link java.lang.String} object
+     * @return a boolean
+     */
     public boolean isIPv4(String ipAddress) {
         return this.isIPv4;
     }
 
+    /**
+     * <p>isIPv6.</p>
+     *
+     * @param ipAddress a {@link java.lang.String} object
+     * @return a boolean
+     */
     public boolean isIPv6(String ipAddress) {
         return this.isIPv6;
     }
 
+    /**
+     * <p>Getter for the field <code>inetAddress</code>.</p>
+     *
+     * @return a {@link java.net.InetAddress} object
+     */
     public InetAddress getInetAddress() {
         return inetAddress;
     }
 
+    /**
+     * <p>getIPAddress.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getIPAddress() {
         return inetAddress.getHostAddress();
     }
 
+    /**
+     * <p>isPrivate.</p>
+     *
+     * @return a boolean
+     */
     public boolean isPrivate() {
         return isPrivate;
     }
