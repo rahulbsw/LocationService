@@ -23,8 +23,7 @@
     THE SOFTWARE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
@@ -35,7 +34,7 @@
     </modules>
     <groupId>io.github.rahulbsw</groupId>
     <artifactId>ip2location-grcp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>LocationService</name>
     <description>Project Location Service using GRPC and IP lookup</description>
     <url>https://github.com/rahulbsw/IP2Location-Service-GRPC</url>
@@ -387,7 +386,7 @@
                     <localCheckout>true</localCheckout>
                     <pushChanges>false</pushChanges>
                     <mavenExecutorId>forked-path</mavenExecutorId>
-                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                    <arguments>-Dgpg.passphrase=${gpg.ossrh.passphrase}</arguments>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -415,6 +414,6 @@
         <connection>scm:git:git@github.com/rahulbsw/IP2Location-Service-GRPC.git</connection>
         <developerConnection>scm:git:git@github.com/rahulbsw/IP2Location-Service-GRPC.git</developerConnection>
         <url>https://github.com/rahulbsw/IP2Location-Service-GRPC</url>
-        <tag>HEAD</tag>
+        <tag>ip2location-grcp-1.0</tag>
     </scm>
   </project>
