@@ -1,5 +1,12 @@
-# IP 2 Location Service
+# IP To Geo Location Service
 GRPC based GEOIP lookup service
+
+# Download below Databases 
+  ## Maxmind IP 
+     geoip2-city db https://dev.maxmind.com/geoip/geolite2-free-geolocation-data
+  ## IP2Locations
+     db11 https://www.ip2location.com/database/db11-ip-country-region-city-latitude-longitude-zipcode-timezone
+  add in classpath these 2 dbs   
 
 #Modules
 ## Common
