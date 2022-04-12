@@ -33,7 +33,7 @@
         <module>spark</module>
     </modules>
     <groupId>io.github.rahulbsw</groupId>
-    <artifactId>ip2location-grcp</artifactId>
+    <artifactId>ip2geolocation-grcp</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <name>LocationService</name>
     <description>Project Location Service using GRPC and IP lookup</description>
@@ -384,7 +384,7 @@
                 <version>2.5.3</version>
                 <configuration>
                     <localCheckout>true</localCheckout>
-                    <pushChanges>false</pushChanges>
+                    <pushChanges>true</pushChanges>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                     <arguments>-Dgpg.passphrase=${gpg.ossrh.passphrase}</arguments>
                 </configuration>

@@ -28,7 +28,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.rahulbsw</groupId>
-    <artifactId>ip2location-grcp</artifactId>
+    <artifactId>ip2geolocation-grcp</artifactId>
     <version>1.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>sparksql-protobuf</artifactId>
