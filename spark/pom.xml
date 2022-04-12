@@ -43,7 +43,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.rahulbsw</groupId>
-            <artifactId>ip2location-grcp-common</artifactId>
+            <artifactId>ip2geolocation-grcp-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
