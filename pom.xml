@@ -411,9 +411,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git@github.com/rahulbsw/IP2Location-Service-GRPC.git</connection>
-        <developerConnection>scm:git:git@github.com/rahulbsw/IP2Location-Service-GRPC.git</developerConnection>
-        <url>https://github.com/rahulbsw/IP2Location-Service-GRPC</url>
-        <tag>ip2location-grcp-1.0</tag>
+        <connection>scm:git:git@github.com/rahulbsw/IP2GeoLocation-Service-GRPC.git</connection>
+        <developerConnection>scm:git:git@github.com/rahulbsw/IP2GeoLocation-Service-GRPC.git</developerConnection>
+        <url>https://github.com/rahulbsw/IP2GeoLocation-Service-GRPC</url>
+        <tag>ip2geolocation-grcp-${project.version}</tag>
     </scm>
   </project>
