@@ -23,9 +23,12 @@
 package io.github.pantomath.location;
 
 import io.github.pantomath.location.common.IP2LocationServer;
+import io.github.pantomath.location.config.DBConfig;
 import io.github.pantomath.location.services.FinderService;
 import lombok.extern.log4j.Log4j2;
-
+import java.net.URISyntaxException;
+import java.net.URI;
+import java.io.File;
 /**
  * <p>Application class.</p>
  *
@@ -34,6 +37,12 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class Application {
+    static final String MAXMIND_CITY_DB_PATH="MAXMIND_CITY_DB_PATH";
+    static final String MAXMIND_ISP_DB_PATH="MAXMIND_ISP_DB_PATH";
+    static final String MAXMIND_ASN_DB_PATH="MAXMIND_ASN_DB_PATH";
+    static final String IP2LOCATION_CITY_DB_PATH="IP2LOCATION_CITY_DB_PATH";
+    static final String IP2LOCATION_ISP_DB_PATH="IP2LOCATION_ISP_DB_PATH";
+    static final String IP2LOCATION_DB_PATH="IP2LOCATION_ASN_DB_PATH";
 
     /**
      * <p>main.</p>
@@ -43,9 +52,54 @@ public class Application {
      */
     public static void main(String[] args) throws Exception {
         // Create a new server to listen on port 8080
-        IP2LocationServer server = new IP2LocationServer(8080, new FinderService());
+        DBConfig[] configs=new DBConfig[2];
+        Integer port=Integer.parseInt(System.getProperty("PORT","8080"));
+        String maxmind_city_db=System.getProperty(MAXMIND_CITY_DB_PATH);
+        String maxmind_isp_db=System.getProperty(MAXMIND_ISP_DB_PATH);
+        String maxmind_asn_db=System.getProperty(MAXMIND_ASN_DB_PATH);
+        String ip2location_city_db=System.getProperty(IP2LOCATION_CITY_DB_PATH);
+        String ip2location_isp_db=System.getProperty(IP2LOCATION_ISP_DB_PATH);
+        String ip2location_asn_db=System.getProperty(IP2LOCATION_DB_PATH);
+        boolean isMaxmind=getURI(maxmind_city_db)!=null;
+        boolean isIp2location=getURI(ip2location_city_db)!=null;
+        if(isMaxmind && isIp2location)
+            configs=new DBConfig[2];
+        else if (isMaxmind ||isIp2location)
+            configs=new DBConfig[1];
+        else
+            configs=new DBConfig[0];
+        int i=0;
+        if(isMaxmind) {
+            configs[0] = new DBConfig(DBConfig.TYPE.MAXMIND,
+                    getURI(maxmind_city_db),
+                    getURI(maxmind_isp_db),
+                    getURI(maxmind_asn_db)
+            );
+            i++;
+        }
+        if(isIp2location) {
+            configs[i] = new DBConfig(DBConfig.TYPE.IP2LOCATION,
+                    getURI(ip2location_city_db),
+                    getURI(ip2location_isp_db),
+                    getURI(ip2location_asn_db)
+            );
+        }
+
+        IP2LocationServer server = new IP2LocationServer(port, new FinderService(configs));
         server.start();
         server.blockUntilShutdown();
+    }
+
+    private static URI getURI(String path){
+        if(path!=null)
+        {
+          try {
+             return new File(path).toURI();
+          }catch (Exception e){
+              //ignore
+          }
+        }
+        return null;
     }
 }
 

@@ -48,18 +48,11 @@ public class FinderService extends FindGrpc.FindImplBase {
      * @throws java.net.URISyntaxException if any.
      * @throws io.github.pantomath.location.exception.InitializationException if any.
      */
-    public FinderService() throws URISyntaxException, InitializationException {
-        this.stores[0] = Store.create(new DBConfig(DBConfig.TYPE.MAXMIND,
-                FinderService.class.getResource("/database/GeoLite2-City.mmdb").toURI(),
-                null,
-                FinderService.class.getResource("/database/GeoLite2-ASN.mmdb").toURI()
-        ));
-
-        this.stores[1] = Store.create(new DBConfig(DBConfig.TYPE.IP2LOCATION,
-                FinderService.class.getResource("/database/IP2LOCATION-LITE-DB11.BIN").toURI(),
-                null,
-                null
-        ));
+    public FinderService(DBConfig[] configs) throws URISyntaxException, InitializationException {
+        this.stores = new Store[configs.length];
+        for (int i = 0; i < configs.length; i++) {
+            this.stores[i]=Store.create(configs[i]);
+        }
     }
 
     /** {@inheritDoc} */

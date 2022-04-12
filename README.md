@@ -6,7 +6,7 @@ GRPC based GEOIP lookup service
      geoip2-city db https://dev.maxmind.com/geoip/geolite2-free-geolocation-data
   ## IP2Locations
      db11 https://www.ip2location.com/database/db11-ip-country-region-city-latitude-longitude-zipcode-timezone
-  add in classpath these 2 dbs   
+
 
 #Modules
 ## Common
@@ -23,3 +23,17 @@ GRPC based GEOIP lookup service
 mvn clean install
 ```
 
+#How to run
+## Start Server 
+```shell
+java io.github.pantomath.location.Application -DPORT=8080 \
+                    -DMAXMIND_CITY_DB_PATH=<db path> \
+                    -DIP2LOCATION_CITY_DB_PATH=<db path> 
+                    
+```
+
+Other db types path optional
+*. MAXMIND_ISP_DB_PATH
+*. MAXMIND_ASN_DB_PATH
+*. IP2LOCATION_ISP_DB_PATH
+*. IP2LOCATION_DB_PATH
