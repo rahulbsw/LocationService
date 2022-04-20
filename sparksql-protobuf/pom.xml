@@ -29,10 +29,9 @@
   <parent>
     <groupId>io.github.rahulbsw</groupId>
     <artifactId>ip2geolocation-grcp</artifactId>
-    <version>1.0.41</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
   <artifactId>sparksql-protobuf</artifactId>
-  <version> 1.0.41</version>
   <packaging>jar</packaging>
 
   <name>sparksql protobuf</name>
