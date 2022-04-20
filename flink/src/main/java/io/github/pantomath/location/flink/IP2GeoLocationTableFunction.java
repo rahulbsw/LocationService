@@ -20,36 +20,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.pantomath.location.spark;
+package io.github.pantomath.location.flink;
 
 import com.google.common.base.Preconditions;
+import io.findify.flinkpb.FlinkProtobuf;
 import io.github.pantomath.location.common.CityResponse;
 import io.github.pantomath.location.common.CountryResponse;
 import io.github.pantomath.location.common.IP2LookupClient;
 import io.github.pantomath.location.common.LocationResponse;
-import io.github.pantomath.location.proto.spark.sql.ProtoRDDConversions;
-import io.github.pantomath.location.proto.spark.sql.ProtoReflection;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder;
-import org.apache.spark.sql.expressions.UserDefinedFunction;
-import org.apache.spark.sql.functions;
-import org.apache.spark.sql.types.StructType;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.table.annotation.DataTypeHint;
+import org.apache.flink.table.annotation.FunctionHint;
+import org.apache.flink.table.catalog.DataTypeFactory;
+import org.apache.flink.table.functions.TableFunction;
+import org.apache.flink.table.types.DataType;
+import org.apache.flink.table.types.inference.TypeInference;
+import org.apache.flink.types.Row;
 
 import java.io.Serializable;
 
-/**
- * <p>IP2LookupFunction class.</p>
- *
- * @author rajain5
- * @version $Id: $Id
- */
-public class IP2LookupFunction implements Serializable {
-
+@FunctionHint(output = @DataTypeHint(bridgedTo = LocationResponse.class))
+public  class IP2GeoLocationTableFunction extends TableFunction<LocationResponse> {
     private static ServerInfo serverInfo;
-    private static StructType locationSchema = (StructType) ProtoReflection.schemaFor(LocationResponse.class).dataType();
-    /** Constant <code>getLocation</code> */
-    public static UserDefinedFunction getLocation = functions.udf((String ip) -> ProtoRDDConversions.messageToRow(location(ip)), locationSchema);
-    private static StructType citySchema = (StructType) ProtoReflection.schemaFor(CityResponse.class).dataType();
+
+    public IP2GeoLocationTableFunction(String hostname,int port) {
+        super();
+        serverInfo=new ServerInfo(hostname,port);
+    }
+
+    public IP2GeoLocationTableFunction(String hostname) {
+        this(hostname,8080);
+    }
+
+//    @Override
+//    public TypeInference getTypeInference(DataTypeFactory typeFactory) {
+//
+//        TypeInference.newBuilder().typedArguments()
+//         typeFactory.createRawDataType(FlinkProtobuf.generateJava(LocationResponse.class, LocationResponse.getDefaultInstance()))
+//         return typeFactory;
+//    }
+
+    @Override
+    public TypeInformation<LocationResponse> getResultType() {
+        return FlinkProtobuf.generateJava(LocationResponse.class, LocationResponse.getDefaultInstance());
+    }
 
     /**
      * <p>init.</p>
@@ -59,6 +73,10 @@ public class IP2LookupFunction implements Serializable {
      */
     public static void init(String hostname, int port) {
         serverInfo = new ServerInfo(hostname, port);
+    }
+
+    public void eval(String str) {
+        collect(location(str));
     }
 
     private static LocationResponse location(String ip) {
@@ -74,6 +92,7 @@ public class IP2LookupFunction implements Serializable {
         return IP2LookupClient.getOrCreate(serverInfo.hostname, serverInfo.port).country(ip);
     }
 
+
     public static class ServerInfo implements Serializable {
         protected String hostname;
         protected int port = 8080;
@@ -87,9 +106,5 @@ public class IP2LookupFunction implements Serializable {
     }
 
 
-//    public static <T extends GeneratedMessageV3> StructType schema(T pojo){
-//        for (Map.Entry<Descriptors.FieldDescriptor, Object> entry : pojo.getAllFields().entrySet()) {
-//            entry.getKey().getJavaType().equals(Descriptors.FieldDescriptor.JavaType.BOOLEAN)
-//        }
-//    }
+
 }

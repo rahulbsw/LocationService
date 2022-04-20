@@ -31,6 +31,7 @@ import io.grpc.stub.StreamObserver;
 import lombok.extern.log4j.Log4j2;
 
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * <p>FinderService class.</p>
@@ -156,29 +157,29 @@ public class FinderService extends FindGrpc.FindImplBase {
         Location location = Location.getDefaultInstance();
         for (Store store : stores) {
             location = store.location(ip, includeIsp, includeDomain);
-            if (Location.getDefaultInstance().equals(location)) //if not found try other store
-                continue;
+            if (!Location.getDefaultInstance().equals(location)) //if not found try other store
+                break;
         }
-        return location;
+        return Optional.ofNullable(location).orElse(Location.getDefaultInstance());
     }
 
     private City cityInternal(String ip) throws LookupException {
         City city = City.getDefaultInstance();
         for (Store store : stores) {
             city = store.city(ip);
-            if (City.getDefaultInstance().equals(city)) //if not found try other store
-                continue;
+            if (!City.getDefaultInstance().equals(city)) //if not found try other store
+                break;
         }
-        return city;
+        return Optional.ofNullable(city).orElse(City.getDefaultInstance());
     }
 
     private Country countryInternal(String ip) throws LookupException {
         Country country = Country.getDefaultInstance();
         for (Store store : stores) {
             country = store.country(ip);
-            if (Country.getDefaultInstance().equals(country)) //if not found try other store
-                continue;
+            if (!Country.getDefaultInstance().equals(country)) //if not found try other store
+                break;
         }
-        return country;
+        return Optional.ofNullable(country).orElse(Country.getDefaultInstance());
     }
 }

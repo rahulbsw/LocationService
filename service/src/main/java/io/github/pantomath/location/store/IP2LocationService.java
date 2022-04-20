@@ -75,7 +75,7 @@ public class IP2LocationService extends Store {
                         .setCity(response.getCity())
                         .setCountryIsoCode(response.getCountryShort())
                         .setCountry(response.getCountryLong())
-                        .setContinent(response.getAreaCode())
+                        .setContinent(StoreUtils.getContinent(response.getCountryShort()))
                         .setRegion(response.getRegion())
                         .setZipcode(response.getZipCode())
                         .setLatitude(response.getLatitude())

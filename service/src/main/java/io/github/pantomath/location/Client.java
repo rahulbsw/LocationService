@@ -48,7 +48,6 @@ public class Client {
             ip2Lookup = new IP2LookupClient("localhost", 8080);
             // Finally, make the call using the stub
             CityResponses response = ip2Lookup.cities("128.107.241.164", "98.143.133.154", "107.6.171.130", "45.33.66.232", "69.175.97.170", "173.255.213.43");
-
             System.out.println(response.getCitiesList());
         } finally {
             if (Objects.nonNull(ip2Lookup))

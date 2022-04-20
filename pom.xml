@@ -31,6 +31,7 @@
         <module>service</module>
         <module>sparksql-protobuf</module>
         <module>spark</module>
+        <module>flink</module>
     </modules>
     <groupId>io.github.rahulbsw</groupId>
     <artifactId>ip2geolocation-grcp</artifactId>
