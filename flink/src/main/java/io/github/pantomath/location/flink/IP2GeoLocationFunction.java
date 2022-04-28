@@ -24,46 +24,42 @@ package io.github.pantomath.location.flink;
 
 
 import com.google.common.base.Preconditions;
-import io.github.pantomath.location.common.City;
-import io.github.pantomath.location.common.IP2LookupClient;
-import io.github.pantomath.location.common.ISP;
-import io.github.pantomath.location.common.LocationResponse;
+import io.github.pantomath.location.common.*;
 import org.apache.flink.table.annotation.DataTypeHint;
 import org.apache.flink.table.annotation.FunctionHint;
+import org.apache.flink.table.functions.ScalarFunction;
 import org.apache.flink.table.functions.TableFunction;
 import org.apache.flink.types.Row;
 
 import java.io.Serializable;
 
 
-@FunctionHint(output = @DataTypeHint(value = "ROW<continent STRING,country STRING,country_iso_code STRING, latitude DOUBLE, longitude DOUBLE,region STRING, city STRING, zipcode STRING, timezone STRING, ipaddress STRING,isp STRING,organization STRING,domain STRING>"))
-public  class IP2GeoLocationTableFunction extends TableFunction<Row> {
+public  class IP2GeoLocationFunction extends ScalarFunction {
     private static ServerInfo serverInfo;
 
-    public IP2GeoLocationTableFunction(String hostname,int port) {
+    public IP2GeoLocationFunction(String hostname, int port) {
         super();
         serverInfo=new ServerInfo(hostname,port);
     }
 
-    public IP2GeoLocationTableFunction(String hostname) {
+    public IP2GeoLocationFunction(String hostname) {
         this(hostname,8080);
     }
 
     /**
      * <p>init.</p>
      *
-     * @param hostname a {@link java.lang.String} object
+     * @param hostname a {@link String} object
      * @param port a int
      */
     public static void init(String hostname, int port) {
         serverInfo = new ServerInfo(hostname, port);
     }
 
-    public void eval(String str) {
+    public  @DataTypeHint("ROW<continent STRING,country STRING,country_iso_code STRING, latitude DOUBLE, longitude DOUBLE,region STRING, city STRING, zipcode STRING, timezone STRING, ipaddress STRING,isp STRING,organization STRING,domain STRING>") Row eval(String str) {
         LocationResponse locationResponse=location(str);
         City city=locationResponse.getLocation().getCity();
         ISP isp=locationResponse.getLocation().getIsp();
-
         Row row=Row.of(city.getContinent(),
                 city.getCountry(),
                 city.getCountryIsoCode(),
@@ -78,7 +74,7 @@ public  class IP2GeoLocationTableFunction extends TableFunction<Row> {
                 isp.getOrganization(),
                 locationResponse.getLocation().getDomain().getDomain()
         );
-        collect(row);
+        return row;
     }
 
     private static LocationResponse location(String ip) {

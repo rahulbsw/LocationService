@@ -32,6 +32,7 @@
         <module>sparksql-protobuf</module>
         <module>spark</module>
         <module>flink</module>
+<!--        <module>pinot</module>-->
     </modules>
     <groupId>io.github.rahulbsw</groupId>
     <artifactId>ip2geolocation-grcp</artifactId>
