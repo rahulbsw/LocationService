@@ -36,7 +36,7 @@
     </modules>
     <groupId>io.github.rahulbsw</groupId>
     <artifactId>ip2geolocation-grcp</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
     <name>LocationService</name>
     <description>Project Location Service using GRPC and IP lookup</description>
     <url>https://github.com/rahulbsw/IP2Location-Service-GRPC</url>
