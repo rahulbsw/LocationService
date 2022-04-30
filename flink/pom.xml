@@ -31,14 +31,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ip2geolocation-grcp-flink</artifactId>
-
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <flink.version>1.14.4</flink.version>
-        <scala.major.version>2.12</scala.major.version>
-    </properties>
+    <artifactId>ip2geolocation-grcp-flink-${flink.version}</artifactId>
 
     <dependencies>
         <dependency>

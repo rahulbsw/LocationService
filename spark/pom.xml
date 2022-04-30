@@ -31,14 +31,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ip2geolocation-grcp-spark</artifactId>
-
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <spark.version>3.1.2</spark.version>
-        <scala.major.version>2.12</scala.major.version>
-    </properties>
+    <artifactId>ip2geolocation-grcp-spark-${spark.version}_${scala.major.version}</artifactId>
 
     <dependencies>
         <dependency>
@@ -48,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.rahulbsw</groupId>
-            <artifactId>sparksql-protobuf</artifactId>
+            <artifactId>sparksql-protobuf-${spark.version}_${scala.major.version}</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
