@@ -44,11 +44,6 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.rahulbsw</groupId>
-            <artifactId>sparksql-protobuf-${spark.version}_${scala.major.version}</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.major.version}</artifactId>
             <version>${spark.version}</version>

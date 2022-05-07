@@ -26,14 +26,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <modules>
-        <module>common</module>
-        <module>service</module>
-        <module>sparksql-protobuf</module>
-        <module>spark</module>
-        <module>flink</module>
-<!--        <module>pinot</module>-->
-    </modules>
     <groupId>io.github.rahulbsw</groupId>
     <artifactId>ip2geolocation-grcp</artifactId>
     <version>1.1.4-SNAPSHOT</version>
@@ -41,6 +33,7 @@
     <description>Project Location Service using GRPC and IP lookup</description>
     <url>https://github.com/rahulbsw/IP2Location-Service-GRPC</url>
     <inceptionYear>2022</inceptionYear>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -55,9 +48,16 @@
         <flink.version>1.14.4</flink.version>
         <spark.version>3.1.2</spark.version>
         <pinot.version>0.10.0</pinot.version>
-
    </properties>
-  <dependencies>
+    <modules>
+        <module>common</module>
+        <module>service</module>
+        <module>sparksql-protobuf</module>
+        <module>spark</module>
+        <module>flink</module>
+    </modules>
+
+    <dependencies>
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -121,291 +121,269 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.8.2</version>
+                        <executions>
+                            <execution>
+                                <id>default-deploy</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>4.1</version>
+                        <configuration>
+                            <properties>
+                                <owner>Project Location Service using GRPC and IP lookup</owner>
+                            </properties>
+                            <header>com/mycila/maven/plugin/license/templates/MIT.txt</header>
+                            <excludes>
+                                <!-- Text and log files -->
+                                <exclude>**/*.txt</exclude>
+                                <exclude>**/*.log</exclude>
+                                <exclude>**/*.list</exclude>
+                                <exclude>**/*.out</exclude>
+                                <exclude>**/*.generated</exclude>
+                                <exclude>**/*.json</exclude>
+                                <exclude>**/*.schema</exclude>
+
+                                <!-- JDBC Drivers -->
+                                <exclude>**/java.sql.*</exclude>
+
+                                <!-- Spark datasource register -->
+                                <exclude>**/org.apache.spark.sql.sources.DataSourceRegister</exclude>
+
+                                <!-- Binary files -->
+                                <exclude>**/*.avro</exclude>
+                                <exclude>**/*.avsc</exclude>
+                                <exclude>**/*.csv</exclude>
+                                <exclude>**/*.desc</exclude>
+                                <exclude>**/*.parquet</exclude>
+                                <exclude>**/*.gz</exclude>
+                                <exclude>**/*.orc</exclude>
+                                <exclude>**/*.dict</exclude>
+                                <exclude>**/*.raw</exclude>
+                                <exclude>**/*.mapping</exclude>
+                                <exclude>**/*.ser</exclude>
+                                <exclude>**/*.v1</exclude>
+                                <exclude>**/*.v2</exclude>
+
+                                <!-- Auto-generated target directories -->
+                                <exclude>target/**</exclude>
+                                <exclude>**/target/**</exclude>
+
+                                <!-- Docker and Kubernetes (not part of the distribution) -->
+                                <exclude>kubernetes/**</exclude>
+                                <exclude>docker/**</exclude>
+
+                                <!-- Pinot-Druid Benchmark (not part of the distribution) -->
+                                <exclude>contrib/**</exclude>
+
+                                <!-- Top level files -->
+                                <exclude>HEADER</exclude>
+                                <exclude>LICENSE*</exclude>
+                                <exclude>NOTICE*</exclude>
+
+                                <!-- js, css files that are exact copies of the third-party works. In this case, the original header has to
+                                be kept. Please refer to 'Treatment of Third-party works' in https://www.apache.org/legal/src-headers.html
+                                -->
+                                <exclude>**/node_modules/**</exclude>
+                                <exclude>**/dist/**</exclude>
+                                <exclude>**/src/main/resources/*.*rc</exclude>
+
+                                <!-- files from Eclipse -->
+                                <exclude>**/maven-eclipse.xml</exclude>
+                                <exclude>.externalToolBuilders/**</exclude>
+                            </excludes>
+                            <mapping>
+                                <java>JAVADOC_STYLE</java>
+                                <scala>JAVADOC_STYLE</scala>
+                                <thrift>JAVADOC_STYLE</thrift>
+                                <g4>JAVADOC_STYLE</g4>
+                                <ts>JAVADOC_STYLE</ts>
+                                <tsx>JAVADOC_STYLE</tsx>
+                                <config>SCRIPT_STYLE</config>
+                                <queries>SCRIPT_STYLE</queries>
+                                <results>SCRIPT_STYLE</results>
+                                <MockMaker>SCRIPT_STYLE</MockMaker>
+                                <appAssemblerScriptTemplate>SCRIPT_STYLE</appAssemblerScriptTemplate>
+                                <pql>SCRIPT_STYLE</pql>
+                                <sql>SCRIPT_STYLE</sql>
+                                <conf>DOUBLESLASH_STYLE</conf>
+                                <cfg>DOUBLESLASH_STYLE</cfg>
+                                <proto>DOUBLESLASH_STYLE</proto>
+                                <rst>RST_STYLE</rst>
+                                <readme>RST_STYLE</readme>
+                            </mapping>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <version>0.13</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <excludes>
+                                <!-- Exclude license copies -->
+                                <exclude>licenses/**</exclude>
+                                <exclude>licenses-binary/**</exclude>
+
+                                <!-- Exclude build targets -->
+                                <exclude>**/target/**</exclude>
+
+                                <!-- Text and log files -->
+                                <exclude>**/*.txt</exclude>
+                                <exclude>**/*.log</exclude>
+                                <exclude>**/*.list</exclude>
+                                <exclude>**/*.out</exclude>
+                                <exclude>**/*.generated</exclude>
+                                <exclude>**/*.json</exclude>
+                                <exclude>**/*.schema</exclude>
+                                <exclude>**/*.proto</exclude>
+
+                                <!-- JDBC Drivers -->
+                                <exclude>**/java.sql.*</exclude>
+
+                                <!-- Spark datasource register -->
+                                <exclude>**/org.apache.spark.sql.sources.DataSourceRegister</exclude>
+
+                                <!-- Binary files -->
+
+                                <exclude>**/*.avro</exclude>
+                                <exclude>**/*.avsc</exclude>
+                                <exclude>**/*.csv</exclude>
+                                <exclude>**/*.desc</exclude>
+                                <exclude>**/*.parquet</exclude>
+                                <exclude>**/*.gz</exclude>
+                                <exclude>**/*.orc</exclude>
+                                <exclude>**/*.dict</exclude>
+                                <exclude>**/*.raw</exclude>
+                                <exclude>**/*.mapping</exclude>
+                                <exclude>**/*.ser</exclude>
+                                <exclude>**/*.v1</exclude>
+                                <exclude>**/*.v2</exclude>
+                                <exclude>**/appAssemblerScriptTemplate</exclude>
+
+                                <!-- js, css files that are exact copies of the third-party works. In this case, the original header has to
+                                be kept. Please refer to 'Treatment of Third-party works' in https://www.apache.org/legal/src-headers.html
+                                -->
+                                <exclude>**/node_modules/**</exclude>
+                                <exclude>**/dist/**</exclude>
+                                <exclude>**/*.*rc</exclude>
+                                <exclude>**/src/main/resources/*.*rc</exclude>
+
+                                <!-- IDE files -->
+                                <exclude>**/*.iml</exclude>
+                                <exclude>**/maven-eclipse.xml</exclude>
+                                <exclude>**/.settings/**</exclude>
+                                <exclude>**/.project</exclude>
+                                <exclude>.externalToolBuilders/**</exclude>
+                                <exclude>README*</exclude>
+                                <exclude>mvnw*</exclude>
+                                <exclude>.mvn/**</exclude>
+
+                                <!-- Docker and Kubernetes (not part of the distribution) -->
+                                <exclude>kubernetes/**</exclude>
+                                <exclude>docker/**</exclude>
+
+                                <!-- Pinot-Druid Benchmark (not part of the distribution) -->
+                                <exclude>contrib/**</exclude>
+
+                                <!-- Github template files -->
+                                <exclude>.github/*.md</exclude>
+
+                                <!-- Test output -->
+                                <exclude>**/test-output/**</exclude>
+
+                                <!-- MISC -->
+                                <exclude>**/.factorypath</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>2.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>download-licenses</id>
+                                <goals>
+                                    <goal>download-licenses</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <localCheckout>true</localCheckout>
+                            <pushChanges>false</pushChanges>
+                            <mavenExecutorId>forked-path</mavenExecutorId>
+                            <arguments>-Dgpg.passphrase=${gpg.ossrh.passphrase}</arguments>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.scm</groupId>
+                                <artifactId>maven-scm-provider-gitexe</artifactId>
+                                <version>1.9.4</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>github</id>
-            <repositories>
-                <repository>
-                    <id>central</id>
-                    <url>https://repo1.maven.org/maven2</url>
-                </repository>
-<!--                <repository>-->
-<!--                    <id>github</id>-->
-<!--                    <url>https://maven.pkg.github.com/rahulbsw/IP2Location-Service-GRPC</url>-->
-<!--                    <snapshots>-->
-<!--                        <enabled>true</enabled>-->
-<!--                    </snapshots>-->
-<!--                </repository>-->
-            </repositories>
-            <distributionManagement>
-                <repository>
-                    <id>github</id>
-                    <name>GitHub Rahul's Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/rahulbsw/IP2Location-Service-GRPC</url>
-                </repository>
-            </distributionManagement>
         </profile>
     </profiles>
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>4.1</version>
-                <configuration>
-                    <properties>
-                        <owner>Project Location Service using GRPC and IP lookup</owner>
-                    </properties>
-                    <header>com/mycila/maven/plugin/license/templates/MIT.txt</header>
-                    <excludes>
-                        <!-- Text and log files -->
-                        <exclude>**/*.txt</exclude>
-                        <exclude>**/*.log</exclude>
-                        <exclude>**/*.list</exclude>
-                        <exclude>**/*.out</exclude>
-                        <exclude>**/*.generated</exclude>
-                        <exclude>**/*.json</exclude>
-                        <exclude>**/*.schema</exclude>
 
-                        <!-- JDBC Drivers -->
-                        <exclude>**/java.sql.*</exclude>
-
-                        <!-- Spark datasource register -->
-                        <exclude>**/org.apache.spark.sql.sources.DataSourceRegister</exclude>
-
-                        <!-- Binary files -->
-                        <exclude>**/*.avro</exclude>
-                        <exclude>**/*.avsc</exclude>
-                        <exclude>**/*.csv</exclude>
-                        <exclude>**/*.desc</exclude>
-                        <exclude>**/*.parquet</exclude>
-                        <exclude>**/*.gz</exclude>
-                        <exclude>**/*.orc</exclude>
-                        <exclude>**/*.dict</exclude>
-                        <exclude>**/*.raw</exclude>
-                        <exclude>**/*.mapping</exclude>
-                        <exclude>**/*.ser</exclude>
-                        <exclude>**/*.v1</exclude>
-                        <exclude>**/*.v2</exclude>
-
-                        <!-- Auto-generated target directories -->
-                        <exclude>target/**</exclude>
-                        <exclude>**/target/**</exclude>
-
-                        <!-- Docker and Kubernetes (not part of the distribution) -->
-                        <exclude>kubernetes/**</exclude>
-                        <exclude>docker/**</exclude>
-
-                        <!-- Pinot-Druid Benchmark (not part of the distribution) -->
-                        <exclude>contrib/**</exclude>
-
-                        <!-- Top level files -->
-                        <exclude>HEADER</exclude>
-                        <exclude>LICENSE*</exclude>
-                        <exclude>NOTICE*</exclude>
-
-                        <!-- js, css files that are exact copies of the third-party works. In this case, the original header has to
-                        be kept. Please refer to 'Treatment of Third-party works' in https://www.apache.org/legal/src-headers.html
-                        -->
-                        <exclude>**/node_modules/**</exclude>
-                        <exclude>**/dist/**</exclude>
-                        <exclude>**/src/main/resources/*.*rc</exclude>
-
-                        <!-- files from Eclipse -->
-                        <exclude>**/maven-eclipse.xml</exclude>
-                        <exclude>.externalToolBuilders/**</exclude>
-                    </excludes>
-                    <mapping>
-                        <java>JAVADOC_STYLE</java>
-                        <scala>JAVADOC_STYLE</scala>
-                        <thrift>JAVADOC_STYLE</thrift>
-                        <g4>JAVADOC_STYLE</g4>
-                        <ts>JAVADOC_STYLE</ts>
-                        <tsx>JAVADOC_STYLE</tsx>
-                        <config>SCRIPT_STYLE</config>
-                        <queries>SCRIPT_STYLE</queries>
-                        <results>SCRIPT_STYLE</results>
-                        <MockMaker>SCRIPT_STYLE</MockMaker>
-                        <appAssemblerScriptTemplate>SCRIPT_STYLE</appAssemblerScriptTemplate>
-                        <pql>SCRIPT_STYLE</pql>
-                        <sql>SCRIPT_STYLE</sql>
-                        <conf>DOUBLESLASH_STYLE</conf>
-                        <cfg>DOUBLESLASH_STYLE</cfg>
-                        <proto>DOUBLESLASH_STYLE</proto>
-                        <rst>RST_STYLE</rst>
-                        <readme>RST_STYLE</readme>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-                <version>0.13</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <excludes>
-                        <!-- Exclude license copies -->
-                        <exclude>licenses/**</exclude>
-                        <exclude>licenses-binary/**</exclude>
-
-                        <!-- Exclude build targets -->
-                        <exclude>**/target/**</exclude>
-
-                        <!-- Text and log files -->
-                        <exclude>**/*.txt</exclude>
-                        <exclude>**/*.log</exclude>
-                        <exclude>**/*.list</exclude>
-                        <exclude>**/*.out</exclude>
-                        <exclude>**/*.generated</exclude>
-                        <exclude>**/*.json</exclude>
-                        <exclude>**/*.schema</exclude>
-                        <exclude>**/*.proto</exclude>
-
-                        <!-- JDBC Drivers -->
-                        <exclude>**/java.sql.*</exclude>
-
-                        <!-- Spark datasource register -->
-                        <exclude>**/org.apache.spark.sql.sources.DataSourceRegister</exclude>
-
-                        <!-- Binary files -->
-
-                        <exclude>**/*.avro</exclude>
-                        <exclude>**/*.avsc</exclude>
-                        <exclude>**/*.csv</exclude>
-                        <exclude>**/*.desc</exclude>
-                        <exclude>**/*.parquet</exclude>
-                        <exclude>**/*.gz</exclude>
-                        <exclude>**/*.orc</exclude>
-                        <exclude>**/*.dict</exclude>
-                        <exclude>**/*.raw</exclude>
-                        <exclude>**/*.mapping</exclude>
-                        <exclude>**/*.ser</exclude>
-                        <exclude>**/*.v1</exclude>
-                        <exclude>**/*.v2</exclude>
-                        <exclude>**/appAssemblerScriptTemplate</exclude>
-
-                        <!-- js, css files that are exact copies of the third-party works. In this case, the original header has to
-                        be kept. Please refer to 'Treatment of Third-party works' in https://www.apache.org/legal/src-headers.html
-                        -->
-                        <exclude>**/node_modules/**</exclude>
-                        <exclude>**/dist/**</exclude>
-                        <exclude>**/*.*rc</exclude>
-                        <exclude>**/src/main/resources/*.*rc</exclude>
-
-                        <!-- IDE files -->
-                        <exclude>**/*.iml</exclude>
-                        <exclude>**/maven-eclipse.xml</exclude>
-                        <exclude>**/.settings/**</exclude>
-                        <exclude>**/.project</exclude>
-                        <exclude>.externalToolBuilders/**</exclude>
-                        <exclude>README*</exclude>
-                        <exclude>mvnw*</exclude>
-                        <exclude>.mvn/**</exclude>
-
-                        <!-- Docker and Kubernetes (not part of the distribution) -->
-                        <exclude>kubernetes/**</exclude>
-                        <exclude>docker/**</exclude>
-
-                        <!-- Pinot-Druid Benchmark (not part of the distribution) -->
-                        <exclude>contrib/**</exclude>
-
-                        <!-- Github template files -->
-                        <exclude>.github/*.md</exclude>
-
-                        <!-- Test output -->
-                        <exclude>**/test-output/**</exclude>
-
-                        <!-- MISC -->
-                        <exclude>**/.factorypath</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.0.0</version>
-                <executions>
-                    <execution>
-                        <id>download-licenses</id>
-                        <goals>
-                            <goal>download-licenses</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <localCheckout>true</localCheckout>
-                    <pushChanges>false</pushChanges>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <arguments>-Dgpg.passphrase=${gpg.ossrh.passphrase}</arguments>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.9.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
     <licenses>

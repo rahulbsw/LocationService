@@ -23,16 +23,12 @@
 package io.github.pantomath.location.spark;
 
 import com.google.common.base.Preconditions;
-import io.github.pantomath.location.common.CityResponse;
-import io.github.pantomath.location.common.CountryResponse;
-import io.github.pantomath.location.common.IP2LookupClient;
-import io.github.pantomath.location.common.LocationResponse;
-import io.github.pantomath.location.proto.spark.sql.ProtoRDDConversions;
-import io.github.pantomath.location.proto.spark.sql.ProtoReflection;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder;
+import io.github.pantomath.location.common.*;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
 import org.apache.spark.sql.functions;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 
 import java.io.Serializable;
@@ -46,11 +42,86 @@ import java.io.Serializable;
 public class IP2LookupFunction implements Serializable {
 
     private static ServerInfo serverInfo;
-    private static StructType locationSchema = (StructType) ProtoReflection.schemaFor(LocationResponse.class).dataType();
+    // ROW<
+    // continent STRING,
+    // country STRING,
+    // country_iso_code STRING,
+    // latitude DOUBLE,
+    // longitude DOUBLE,
+    // region STRING,
+    // city STRING,
+    // zipcode STRING,
+    // timezone STRING,
+    // ipaddress STRING,
+    // isp STRING,
+    // organization STRING,
+    // domain STRING>
+    private static StructType locationSchema = DataTypes.createStructType(new StructField[] {
+            DataTypes.createStructField("continent",  DataTypes.StringType, true),
+            DataTypes.createStructField("country", DataTypes.StringType, true),
+            DataTypes.createStructField("country_iso_code", DataTypes.StringType, true),
+            DataTypes.createStructField("latitude", DataTypes.DoubleType, true),
+            DataTypes.createStructField("longitude", DataTypes.DoubleType, true),
+            DataTypes.createStructField("region",  DataTypes.StringType, true),
+            DataTypes.createStructField("city",  DataTypes.StringType, true),
+            DataTypes.createStructField("zipcode",  DataTypes.StringType, true),
+            DataTypes.createStructField("timezone",  DataTypes.StringType, true),
+            DataTypes.createStructField("ipaddress",  DataTypes.StringType, true),
+            DataTypes.createStructField("isp",  DataTypes.StringType, true),
+            DataTypes.createStructField("organization",  DataTypes.StringType, true),
+            DataTypes.createStructField("domain",  DataTypes.StringType, true)
+    });
     /** Constant <code>getLocation</code> */
-    public static UserDefinedFunction getLocation = functions.udf((String ip) -> ProtoRDDConversions.messageToRow(location(ip)), locationSchema);
-    private static StructType citySchema = (StructType) ProtoReflection.schemaFor(CityResponse.class).dataType();
+    public static UserDefinedFunction getLocation = functions.udf((String ip) -> {
+        LocationResponse locationResponse=location(ip);
+        City city=locationResponse.getLocation().getCity();
+        ISP isp=locationResponse.getLocation().getIsp();
+        return RowFactory.create(
+                city.getContinent(),
+                city.getCountry(),
+                city.getCountryIsoCode(),
+                (city.getLatitude()!=0)?city.getLatitude():null,
+                (city.getLongitude()!=0)?city.getLongitude():null,
+                city.getRegion(),
+                city.getCity(),
+                city.getZipcode(),
+                city.getTimezone(),
+                city.getIpaddress(),
+                isp.getIsp(),
+                isp.getOrganization(),
+                locationResponse.getLocation().getDomain().getDomain()
+        );
+    }, locationSchema);
 
+    private static StructType citySchema = DataTypes.createStructType(new StructField[] {
+            DataTypes.createStructField("continent",  DataTypes.StringType, true),
+            DataTypes.createStructField("country", DataTypes.StringType, true),
+            DataTypes.createStructField("country_iso_code", DataTypes.StringType, true),
+            DataTypes.createStructField("latitude", DataTypes.DoubleType, true),
+            DataTypes.createStructField("longitude", DataTypes.DoubleType, true),
+            DataTypes.createStructField("region",  DataTypes.StringType, true),
+            DataTypes.createStructField("city",  DataTypes.StringType, true),
+            DataTypes.createStructField("zipcode",  DataTypes.StringType, true),
+            DataTypes.createStructField("timezone",  DataTypes.StringType, true),
+            DataTypes.createStructField("ipaddress",  DataTypes.StringType, true),
+      });
+
+    public static UserDefinedFunction getCity = functions.udf((String ip) -> {
+        CityResponse locationResponse=city(ip);
+        City city=locationResponse.getCity();
+        return RowFactory.create(
+                city.getContinent(),
+                city.getCountry(),
+                city.getCountryIsoCode(),
+                (city.getLatitude()!=0)?city.getLatitude():null,
+                (city.getLongitude()!=0)?city.getLongitude():null,
+                city.getRegion(),
+                city.getCity(),
+                city.getZipcode(),
+                city.getTimezone(),
+                city.getIpaddress()
+        );
+    }, citySchema);
     /**
      * <p>init.</p>
      *
