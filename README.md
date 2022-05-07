@@ -17,6 +17,12 @@ GRPC based GEOIP lookup service
    Helper module to get schema from protobuf java object and convert into spark `Row` object
 ## spark 
   Provide UDF for ip2Geolocation
+  
+  ```  
+      spark.ip2geolocation.server.hostname=<hostname/ip>
+      spark.ip2geolocation.server.port=<port>
+  ```
+
 ## flink
 Provide UDF for ip2Geolocation
 

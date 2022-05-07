@@ -24,6 +24,7 @@ package io.github.pantomath.location.spark;
 
 import com.google.common.base.Preconditions;
 import io.github.pantomath.location.common.*;
+import org.apache.spark.SparkEnv;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
 import org.apache.spark.sql.functions;
@@ -32,6 +33,7 @@ import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * <p>IP2LookupFunction class.</p>
@@ -42,6 +44,8 @@ import java.io.Serializable;
 public class IP2LookupFunction implements Serializable {
 
     private static ServerInfo serverInfo;
+
+
     // ROW<
     // continent STRING,
     // country STRING,
@@ -74,8 +78,9 @@ public class IP2LookupFunction implements Serializable {
     /** Constant <code>getLocation</code> */
     public static UserDefinedFunction getLocation = functions.udf((String ip) -> {
         LocationResponse locationResponse=location(ip);
-        City city=locationResponse.getLocation().getCity();
-        ISP isp=locationResponse.getLocation().getIsp();
+        Location location=(locationResponse.hasLocation())?locationResponse.getLocation():Location.getDefaultInstance();
+        City city=(location.hasCity())?location.getCity():City.getDefaultInstance();
+        ISP isp=(location.hasIsp())?location.getIsp():ISP.getDefaultInstance();
         return RowFactory.create(
                 city.getContinent(),
                 city.getCountry(),
@@ -89,7 +94,7 @@ public class IP2LookupFunction implements Serializable {
                 city.getIpaddress(),
                 isp.getIsp(),
                 isp.getOrganization(),
-                locationResponse.getLocation().getDomain().getDomain()
+                (location.hasDomain())?location.getDomain().getDomain():null
         );
     }, locationSchema);
 
@@ -129,20 +134,36 @@ public class IP2LookupFunction implements Serializable {
      * @param port a int
      */
     public static void init(String hostname, int port) {
+        if(Objects.nonNull(hostname))
+            SparkEnv.get().conf().set("spark.ip2geolocation.server.hostname",hostname);
+        if(Objects.nonNull(port))
+            SparkEnv.get().conf().set("spark.ip2geolocation.server.port",String.valueOf(port));
+        else
+            SparkEnv.get().conf().set("spark.ip2geolocation.server.port","8080");
         serverInfo = new ServerInfo(hostname, port);
     }
 
+    private static IP2LookupClient getIP2LookupClient() {
+        if(Objects.isNull(serverInfo)) {
+            String hostname=SparkEnv.get().conf().get("spark.ip2geolocation.server.hostname");
+            String port=SparkEnv.get().conf().get("spark.ip2geolocation.server.port");
+            serverInfo = new ServerInfo(hostname,Integer.parseInt(port));
+        }
+        return IP2LookupClient.getOrCreate(serverInfo.hostname,serverInfo.port);
+    }
+
+
     private static LocationResponse location(String ip) {
-        LocationResponse locationResponse = IP2LookupClient.getOrCreate(serverInfo.hostname, serverInfo.port).location(ip);
+        LocationResponse locationResponse = getIP2LookupClient().location(ip);
         return locationResponse;
     }
 
     private static CityResponse city(String ip) {
-        return IP2LookupClient.getOrCreate(serverInfo.hostname, serverInfo.port).city(ip);
+        return getIP2LookupClient().city(ip);
     }
 
     private static CountryResponse country(String ip) {
-        return IP2LookupClient.getOrCreate(serverInfo.hostname, serverInfo.port).country(ip);
+        return getIP2LookupClient().country(ip);
     }
 
     public static class ServerInfo implements Serializable {
