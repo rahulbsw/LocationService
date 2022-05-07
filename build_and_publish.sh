@@ -23,8 +23,8 @@
 #
 
 export GPG_TTY=$(tty)
-mvn license:format 
-mvn release:prepare
+mvn license:format -Possrh
+mvn release:prepare -Possrh
 git commit -a
 git push -f -u origin master
- mvn clean deploy release:perform  -Possrh -Dgpg.ossrh.passphrase=$1
+mvn clean deploy release:perform  -Possrh -Dgpg.ossrh.passphrase=$1
